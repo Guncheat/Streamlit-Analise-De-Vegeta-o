@@ -5,10 +5,32 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # 1. Configuração da Página
-st.set_page_config(page_title="Monitoramento NDVI - Paraíba", layout="wide")
+st.set_page_config(page_title="Monitoramento NDVI - Paraíba",page_icon="🌱", layout="wide")
 st.title("🌱 Previsão Espaço-Temporal de NDVI na Caatinga")
-st.markdown("Plataforma interativa de Explainable AI (XAI) comparando dados reais de satélite e predições do modelo LightGBM para o estado da Paraíba.")
-
+st.markdown("Compararativo dados reais de satélite e predições do modelo de Aprendizado de Máquina para o estado da Paraíba.")
+st.markdown("---")
+with st.expander("**Sobre o Aplicativo:**"):
+    st.markdown("Este aplicativo permite analisar a vegetação da Paraíba utilizando o NDVI (Índice de Vegetação por Diferença Normalizada), comparando dados reais de satélite com predições de um modelo de Aprendizado de Máquina (LightGBM).")
+    with st.expander("**O que é NDVI?**"):
+        st.markdown("O NDVI (Normalized Difference Vegetation Index) é um índice que mede a densidade e saúde da vegetação com base na reflexão da luz em diferentes comprimentos de onda. Ele é calculado a partir das bandas do vermelho e do infravermelho próximo, sendo amplamente utilizado em estudos ambientais, agricultura e monitoramento de ecossistemas.")
+        st.markdown("O NDVI varia de -1 a 1, onde valores próximos a 1 indicam vegetação densa e saudável, valores próximos a 0 indicam áreas sem vegetação (como solo exposto ou construções), e valores negativos geralmente correspondem a água ou superfícies não vegetadas.")
+with st.expander("**Instruções de Uso:**"):
+    st.markdown("""
+    1. Utilize a barra lateral para selecionar o período de interesse (Ano Único, Mês Específico ou Intervalo de Meses).
+    2. Visualize os mapas de NDVI real e predito, comparando a vegetação observada com a estimada pelo modelo.
+    3. Analise as séries temporais de precipitação por região e consulte o resumo estatístico das variáveis.
+    4. Confira as métricas de desempenho do modelo (R², MAE, RMSE) e entenda seu significado.
+    5. Faça o download dos dados filtrados em formato CSV para análises externas. """)
+    st.markdown("---")
+    st.markdown("**Observação:** Este aplicativo é uma ferramenta educacional e de análise exploratória. As predições do modelo devem ser interpretadas com cautela e não substituem análises detalhadas de campo ou estudos científicos aprofundados.")    
+    st.markdown("---")
+st.markdown("---")
+with st.expander("Metodologia"):
+    st.markdown("""Os dados utilizados para treinar o modelo de Aprendizado de Máquina (LightGBM) foram coletados a partir de imagens de satélite e registros meteorológicos históricos da Paraíba. O NDVI foi calculado a partir das bandas do vermelho e do infravermelho próximo, enquanto as variáveis ambientais, como precipitação, temperatura do solo e relevo, foram obtidas Google Earth Engine. O pré-processamento dos dados envolveu a limpeza, normalização e transformação das variáveis para garantir a qualidade e consistência dos dados utilizados no treinamento do modelo. A divisão dos dados em conjuntos de treinamento e teste permitiu avaliar o desempenho do modelo em diferentes cenários, garantindo sua robustez e capacidade de generalização. As métricas de avaliação, como R², MAE e RMSE, foram utilizadas para quantificar a precisão das predições do modelo em relação aos valores observados de NDVI. A metodologia adotada visa fornecer uma ferramenta confiável para monitoramento da vegetação na Paraíba, contribuindo para estudos ambientais e tomada de decisões informadas.""")
+    st.markdown("O modelo de Aprendizado de Máquina (LightGBM) foi treinado utilizando dados históricos de NDVI, precipitação, temperatura do solo e relevo da Paraíba. O objetivo é prever o NDVI em diferentes regiões do estado com base nas variáveis ambientais disponíveis. A metodologia envolveu a coleta e pré-processamento dos dados, a divisão em conjuntos de treinamento e teste, o ajuste do modelo e a avaliação de seu desempenho por meio de métricas como R², MAE e RMSE.")
+    st.markdown("---")
+    st.markdown("Qualquer dúvida ou sugestão, entre em contato: igor.negreiros2@ufrpe.br")
+    st.markdown("---")
 # 2. Carregamento e Preparação dos Dados
 @st.cache_data
 def carregar_dados():
@@ -65,6 +87,11 @@ else: # Período (Intervalo)
 
 st.sidebar.markdown("---")
 st.sidebar.info("Utilize os filtros acima para atualizar dinamicamente os mapas, gráficos e métricas.")
+#with st.sidebar.expander("Simule diferentes cenários"):
+#    st.markdown("Você pode simular diferentes cenários de precipitação e temperatura do solo para observar como o modelo de Aprendizado de Máquina (LightGBM) prevê o NDVI em diferentes regiões da Paraíba. Ajuste os sliders abaixo para alterar os valores das variáveis ambientais e veja como isso impacta as predições do modelo.")
+#    precipitacao_simulada = st.slider("Precipitação Simulada (mm)", min_value=0, max_value=300, value=100)
+#    temperatura_solo_simulada = st.slider("Temperatura do Solo Simulada (°C)", min_value=15, max_value=45, value=30)
+#    st.markdown("Após ajustar os valores simulados, observe as mudanças nos mapas e gráficos apresentados no aplicativo. Isso permite entender melhor a sensibilidade do modelo às variáveis ambientais e como elas influenciam a vegetação na região semiárida da Paraíba.")
 
 # 4. Renderização dos Mapas
 st.header(f"Visão Espacial - {periodo_texto}")
@@ -152,3 +179,8 @@ st.download_button(
     file_name=f"dados_ndvi_paraiba_{periodo_texto.replace(':', '').replace(' ', '_')}.csv",
     mime="text/csv",
 )
+with st.expander("**Referências:**"):
+    st.markdown("**Fonte dos Dados:** Os dados utilizados neste aplicativo foram obtidos de fontes públicas (Google Earth Engine) e confiáveis (https://developers.google.com/earth-engine), incluindo imagens de satélite e registros meteorológicos. O modelo de Aprendizado de Máquina (LightGBM) foi treinado utilizando essas informações para fornecer estimativas do NDVI em diferentes regiões da Paraíba.")
+    st.markdown("**Equipe de Desenvolvimento:** Este aplicativo foi desenvolvido por Igor Barbosa Negreiros, Mestrando em Biometria e Estatística Aplicada pela Universidade Federal Rural de Pernambuco (UFRPE), sob orientação do Prof. Dr. Wilson Rosa De Oliveira Junior , com o objetivo de fornecer uma ferramenta interativa para análise da vegetação na Paraíba. Agradecemos a todos que contribuíram com sugestões e feedbacks durante o desenvolvimento.")
+    st.markdown("Esse trabalho faz parte do projeto de pesquisa financiado pela CAPES (Coordenação de Aperfeiçoamento de Pessoal de Nível Superior) e visa promover a compreensão da dinâmica da vegetação na região semiárida do Nordeste brasileiro, contribuindo para estudos ambientais e de sustentabilidade.")
+    st.markdown("“O presente trabalho foi realizado com apoio da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Código de Financiamento 001”.")
