@@ -99,23 +99,23 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("**NDVI Real (Observado via Satélite)**")
-    fig_real = px.scatter_mapbox(
+    fig_real = px.scatter_map(
         df_filtrado, lat="Latitude", lon="Longitude", color="NDVI",
         color_continuous_scale="RdYlGn", range_color=[0, 0.9],
-        zoom=5.5, center={"lat": -7.115, "lon": -36.5}, mapbox_style="carto-positron"
+        zoom=5.5, center={"lat": -7.115, "lon": -36.5}, map_style="carto-positron"
     )
     fig_real.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    st.plotly_chart(fig_real, use_container_width=True)
+    st.plotly_chart(fig_real, width="content")
 
 with col2:
     st.markdown("**NDVI Predito (Modelo LightGBM)**")
-    fig_pred = px.scatter_mapbox(
+    fig_pred = px.scatter_map(
         df_filtrado, lat="Latitude", lon="Longitude", color="NDVI_Predito",
         color_continuous_scale="RdYlGn", range_color=[0, 0.9],
-        zoom=5.5, center={"lat": -7.115, "lon": -36.5}, mapbox_style="carto-positron"
+        zoom=5.5, center={"lat": -7.115, "lon": -36.5}, map_style="carto-positron"
     )
     fig_pred.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    st.plotly_chart(fig_pred, use_container_width=True)
+    st.plotly_chart(fig_pred, width="content")
 
 st.markdown("---")
 
@@ -133,14 +133,14 @@ with col_grafico:
         labels={"Precipitacao": "Precipitação Média (mm)", "Data": "Período"},
         markers=True, template="simple_white"
     )
-    st.plotly_chart(fig_chuva, use_container_width=True)
+    st.plotly_chart(fig_chuva, width="content")
 
 with col_tabela:
     st.subheader("Resumo Estatístico")
     st.markdown("Comparativo geral das variáveis no período selecionado:")
     resumo_estatistico = df_filtrado[['NDVI', 'NDVI_Predito', 'Precipitacao', 'Temperatura_Solo']].describe().round(2).T[['mean', 'min', 'max']]
     resumo_estatistico.columns = ['Média', 'Mínimo', 'Máximo']
-    st.dataframe(resumo_estatistico, use_container_width=True)
+    st.dataframe(resumo_estatistico, width="content")
 
 st.markdown("---")
 
@@ -159,7 +159,7 @@ if len(df_filtrado) > 0:
     
     with st.expander("📚 Entenda o que cada métrica significa"):
         st.markdown("""
-        * **R² (Coeficiente de Determinação):** Indica o quão bem o modelo explica a variabilidade do NDVI. Um R² de 0.85, por exemplo, significa que 85% das variações na vegetação (NDVI) são explicadas pelas variáveis que fornecemos (chuva, relevo, temperatura, etc). Quanto mais próximo de 1, melhor.
+        * **R² (Coeficiente de Determinação):** Indica o quão bem o modelo explica a variabilidade do NDVI. Um R² de 0.71, por exemplo, significa que 71% das variações na vegetação (NDVI) são explicadas pelas variáveis que fornecemos (chuva, relevo, temperatura, etc). Quanto mais próximo de 1, melhor.
         * **MAE (Erro Médio Absoluto):** Representa a diferença média "real" entre a predição do modelo e o satélite. Se o MAE for 0.05, significa que, em média, o modelo erra o valor do NDVI em 0.05 pontos (para mais ou para menos). É uma métrica excelente por ser fácil de interpretar.
         * **RMSE (Raiz do Erro Quadrático Médio):** Semelhante ao MAE, mas penaliza erros grandes. Se o RMSE estiver muito maior que o MAE, significa que o modelo tem alguns "erros graves" em pontos específicos do mapa, mesmo acertando a maioria.
         """)
